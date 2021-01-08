@@ -8,10 +8,10 @@ Write a program that will behave like executing a shell command
 - Le chemin de l'exécutable sera absolu ou relatif mais votre programme ne doit pas construire de chemin (à partir de la variable PATH par exemple)
 - Vous devez implémenter "|" et ";" comme dans bash
 	- nous n'essaierons jamais un "|" immédiatement suivi ou précédé de rien ou "|" ou ";"
-- Votre programme doit implémenter la commande intégrée cd uniquement avec un chemin comme argument (pas de '-' ou sans paramètres)
-	- si cd a le mauvais nombre d'arguments, votre programme devrait afficher dans STDERR "error: cd: bad arguments" followed by a '\n'
-	- si le cd a échoué, votre programme devrait imprimer dans STDERR "error: cd: cannot change directory to path_to_change" followed by a '\n' avec chemin_à_changer remplacé par l'argument à cd
-	- une commande cd ne sera jamais immédiatement suivie ou précédée d'un "|"
++ Votre programme doit implémenter la commande intégrée cd uniquement avec un chemin comme argument (pas de '-' ou sans paramètres)
+	+ si cd a le mauvais nombre d'arguments, votre programme devrait afficher dans STDERR "error: cd: bad arguments" followed by a '\n'
+	+ si le cd a échoué, votre programme devrait imprimer dans STDERR "error: cd: cannot change directory to path_to_change" followed by a '\n' avec chemin_à_changer remplacé par l'argument à cd
+	+ une commande cd ne sera jamais immédiatement suivie ou précédée d'un "|"
 - Vous n'avez besoin de gérer aucun type de joker (*, ~ etc ...)
 - Vous n'avez pas besoin de gérer les variables d'environnement ($ BLA ...)
 - Si un appel système, à l'exception de execve et chdir, retourne une erreur votre programme devrait immédiatement afficher "error: fatal" in STDERR followed by a '\n' et le programme devrait quitter
