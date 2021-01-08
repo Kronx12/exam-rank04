@@ -4,19 +4,19 @@ Allowed functions: malloc, free, write, close, fork, waitpid, signal, kill, exit
 --------------------------------------------------------------------------------------
 
 Write a program that will behave like executing a shell command
-- The command line to execute will be the arguments of this program
-- Executable's path will be absolute or relative but your program must not build a path (from the PATH variable for example)
-- You must implement "|" and ";" like in bash
-	- we will never try a "|" immediately followed or preceded by nothing or "|" or ";"
-- Your program must implement the built-in command cd only with a path as argument (no '-' or without parameters)
-	- if cd has the wrong number of argument your program should print in STDERR "error: cd: bad arguments" followed by a '\n'
-	- if cd failed your program should print in STDERR "error: cd: cannot change directory to path_to_change" followed by a '\n' with path_to_change replaced by the argument to cd
-	- a cd command will never be immediately followed or preceded by a "|"
-- You don't need to manage any type of wildcards (*, ~ etc...)
-- You don't need to manage environment variables ($BLA ...)
-- If a system call, except execve and chdir, returns an error your program should immediatly print "error: fatal" in STDERR followed by a '\n' and the program should exit
-- If execve failed you should print "error: cannot execute executable_that_failed" in STDERR followed by a '\n' with executable_that_failed replaced with the path of the failed executable (It should be the first argument of execve)
-- Your program should be able to manage more than hundreds of "|" even if we limit the number of "open files" to less than 30.
+- La ligne de commande à exécuter sera les arguments de ce programme
+- Le chemin de l'exécutable sera absolu ou relatif mais votre programme ne doit pas construire de chemin (à partir de la variable PATH par exemple)
+- Vous devez implémenter "|" et ";" comme dans bash
+	- nous n'essaierons jamais un "|" immédiatement suivi ou précédé de rien ou "|" ou ";"
+- Votre programme doit implémenter la commande intégrée cd uniquement avec un chemin comme argument (pas de '-' ou sans paramètres)
+	- si cd a le mauvais nombre d'arguments, votre programme devrait afficher dans STDERR "error: cd: bad arguments" followed by a '\n'
+	- si le cd a échoué, votre programme devrait imprimer dans STDERR "error: cd: cannot change directory to path_to_change" followed by a '\n' avec chemin_à_changer remplacé par l'argument à cd
+	- une commande cd ne sera jamais immédiatement suivie ou précédée d'un "|"
+- Vous n'avez besoin de gérer aucun type de joker (*, ~ etc ...)
+- Vous n'avez pas besoin de gérer les variables d'environnement ($ BLA ...)
+- Si un appel système, à l'exception de execve et chdir, retourne une erreur votre programme devrait immédiatement afficher "error: fatal" in STDERR followed by a '\n' et le programme devrait quitter
+- Si execve a échoué, vous devez afficher "error: cannot execute executable_that_failed" in STDERR followed by a '\n' avec executable_that_failed remplacé par le chemin de l'exécutable ayant échoué (ce devrait être le premier argument d'execve)
+- Votre programme devrait être capable de gérer plus de centaines de "|" même si on limite le nombre de "fichiers ouverts" à moins de 30.
 
 for example this should work:
 $>./microshell /bin/ls "|" /usr/bin/grep microshell ";" /bin/echo i love my microshell
