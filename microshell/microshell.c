@@ -5,51 +5,47 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: gbaud <gbaud@42lyon.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/08 16:37:54 by gbaud             #+#    #+#             */
-/*   Updated: 2021/01/08 18:34:11 by gbaud            ###   ########lyon.fr   */
+/*   Created: 2021/01/09 15:59:05 by gbaud             #+#    #+#             */
+/*   Updated: 2021/01/09 18:12:46 by gbaud            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
 
+#include <stdio.h>
+
+#define ERR_FATAL "error: fatal\n"
+#define ERR_EXEC "error: cannot execute "
 #define ERR_CD_ARG "error: cd: bad arguments\n"
-#define ERR_CD_MOV "error: cd: cannot change directory to "
-#define STDERR 2
+#define ERR_CD_DIR "error: cd: cannot change directory to "
 
 int ft_strlen(char *str) {
-    int i = 0;
-    while (str[i++]);
-    return (i);
+	int i = 0;
+	while (str[i++]);
+	return (i);
 }
 
-int put_error(char *err, char *path) {
-    write(STDERR, err, ft_strlen(err));
-    if (path) {
-        write(STDERR, path, ft_strlen(path));
-        write(STDERR, "\n", 1);
-    }
-    return (1);
+int put_err(char *err, char *path) {
+	write(2, err, ft_strlen(err));
+	if (path) {
+		write(2, path, ft_strlen(path));
+		write(2, "\n", 1);
+	}
+	return (1);
 }
 
-int cd(char **path, int s, int e) {
-    int i = s;
-    while (i < e && strcmp(path[i], ";")) i++;
-    if (i - s != 2)
-        return (put_error(ERR_CD_ARG, NULL));
-    if (chdir(path[i - 1]))
-        return (put_error(ERR_CD_MOV, path[i - 1]));
-    return (0);
-}
+int main(int ac, char **av, char **env) {
+	pid_t pid;
 
-int main(int ac, char **av) {
-    for (int i = 1; i < ac; i++)
-        dprintf(1, "[%s]\n", av[i]);
-    dprintf(1, "========\n");
-
-    cd(av, 1, ac);
-
-    return (0);
+	if ((pid = fork()) < 0)
+		return (put_err(ERR_FATAL, NULL));
+	else if (pid == 0) {
+		if (execve(av[1], &av[1], env))
+			put_err(ERR_EXEC, av[1]);
+	} else {
+		waitpid(pid, NULL, 0);
+	}
+	return (0);
 }
