@@ -6,7 +6,7 @@
 /*   By: gbaud <gbaud@42lyon.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:59:05 by gbaud             #+#    #+#             */
-/*   Updated: 2021/01/09 18:12:46 by gbaud            ###   ########lyon.fr   */
+/*   Updated: 2021/01/10 13:24:57 by gbaud            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,59 @@ int put_err(char *err, char *path) {
 	return (1);
 }
 
-int main(int ac, char **av, char **env) {
-	pid_t pid;
+void sub(char **argv, char **av, int i, int j) {
+	int k = 0;
+	while (i < j)
+		argv[k++] = av[i++];
+	argv[k] = NULL;
+}
 
-	if ((pid = fork()) < 0)
-		return (put_err(ERR_FATAL, NULL));
-	else if (pid == 0) {
-		if (execve(av[1], &av[1], env))
-			put_err(ERR_EXEC, av[1]);
-	} else {
-		waitpid(pid, NULL, 0);
+int cd(char **av, int len) {
+    if (len != 2)
+        return (put_err(ERR_CD_ARG, NULL));
+    if (chdir(av[1]))
+        return (put_err(ERR_CD_DIR, av[1]));
+    return (0);
+}
+
+int main(int ac, char **av, char **env) {
+	int i=1,j,k,l;
+	while (i < ac) {
+		j=i, k=i, l=i;
+		while (j < ac && strcmp(av[j], ";")) // j = limite semicolon
+			j++;
+		int   p[2];
+		pid_t pid;
+		int   fd_in = 0;
+		while (k < j) { // Tant qu'il y a des pipes
+			l=k;
+			while (l < j && strcmp(av[l], "|")) // [k - l] -> troncon cmd + arg
+				l++;
+			char *argv[l - k + 1];
+			sub(argv, av, k, l);
+			if (!strcmp(argv[0], "cd"))
+				cd(argv, l-k);
+			else {
+				pipe(p);
+				if ((pid = fork()) == -1)
+					return (put_err(ERR_FATAL, NULL));
+				else if (pid == 0) {
+					dup2(fd_in, 0);
+					if (l < j)
+						dup2(p[1], 1);
+					close(p[0]);
+					if (execve(argv[0], argv, env))
+						put_err(ERR_EXEC, argv[0]);
+					exit(EXIT_FAILURE);
+				} else {
+					waitpid(pid, NULL, 0);
+					close(p[1]);
+					fd_in = p[0];
+        		}
+			}
+			k=l+1;
+		}
+		i=j+1;
 	}
 	return (0);
 }

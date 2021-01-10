@@ -1,4 +1,4 @@
-gcc microshell.c -o microshell -Wall -Wextra -Werror -fsanitize=address -g3
+gcc microsh.c -o microshell -Wall -Wextra -Werror -fsanitize=address -g3
 ./microshell /bin/ls
 ./microshell /bin/cat microshell.c
 ./microshell /bin/ls microshell.c
