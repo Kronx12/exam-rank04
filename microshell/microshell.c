@@ -6,7 +6,7 @@
 /*   By: gbaud <gbaud@42lyon.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 15:59:05 by gbaud             #+#    #+#             */
-/*   Updated: 2021/01/12 23:39:03 by gbaud            ###   ########lyon.fr   */
+/*   Updated: 2021/01/13 08:10:56 by gbaud            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int main(int ac, char **av, char **env) {
 					return (put_err(ERR_EXEC, argv[0]));
 				}
 				close(p[1]);
-				close(fd_in);
+				close(fd_in); // TODO Demander a qq qui a fait minishell
 				return (0);
 			} else {
 				waitpid(pid, NULL, 0);
