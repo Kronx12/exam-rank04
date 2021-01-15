@@ -87,7 +87,7 @@ int main(int ac, char **av, char **env) {
 					return (put_err(ERR_EXEC, argv[0]));
 				}
 				close(p[1]);
-				close(fd_in); // TODO Demander a qq qui a fait minishell
+				close(fd_in);
 				return (0);
 			} else {
 				waitpid(pid, NULL, 0);
